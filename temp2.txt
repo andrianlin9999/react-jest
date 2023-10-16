@@ -1,0 +1,34 @@
+{mapData && (
+          <GeoJSON
+            data={mapData as GeoJSONType}
+            style={style}
+            onEachFeature={onEachFeature}
+          />
+        )}
+        {popupPosition && selectedData && (
+          <Popup position={popupPosition} closeButton={false}>
+            <h1 className="font-extrabold text-2xl">{selectedData.postal}</h1>
+            <h1 className="font-bold text-xl">{selectedData.name}</h1>
+            {selectedData.device > 0 ? (
+              <div className="flex flex-row items-end gap-2">
+                <div>
+                  <h1 className="text-lg">Devices</h1>
+                  {/* <h1 className="text-lg">Inactive Devices</h1> */}
+                </div>
+                <div className="text-lg">
+                  <h1 className="text-green-600">{selectedData.device}</h1>
+                  {/* <h1>
+                  <span className="text-green-600">
+                    {selectedData.deviceInactive}
+                  </span>{" "}
+                  <span>%</span>
+                </h1> */}
+                </div>
+              </div>
+            ) : (
+              <h1 className="text-lg text-gray-300 italic">
+                No data available
+              </h1>
+            )}
+          </Popup>
+        )}

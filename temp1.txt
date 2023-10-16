@@ -1,0 +1,80 @@
+import { render, screen, act, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { Auth0Provider } from "@auth0/auth0-react";
+import { BrowserRouter } from "react-router-dom";
+import { AuthorizationProvider } from "src/authorization/authorizationProvider";
+import { ApolloProviderWithAuth0 } from "src/authorization/graphQlRequest";
+import WorldheatMap from "./worldheatMap";
+import Test from "./test";
+import Hello from "./hello";
+
+const clientId = process.env.REACT_APP_CLIENT_ID;
+const audience = process.env.REACT_APP_AUDIENCE;
+const domain = process.env.REACT_APP_DOMAIN;
+const redirectUri = window.location.origin;
+
+jest.mock("@auth0/auth0-react", () => ({
+  Auth0Provider: ({ children }) => children,
+  withAuthenticationRequired: (component, _) => component,
+  useAuth0: () => {
+    return {
+      isLoading: false,
+      user: { sub: "mock user" },
+      isAuthenticated: true,
+      loginWithRedirect: jest.fn(),
+      getAccessTokenSilently: jest.fn(),
+      logout: jest.fn(),
+    };
+  },
+}));
+
+const mockupData = [
+  {
+    name: "CN",
+    count: 2,
+  },
+  {
+    name: null,
+    count: 1,
+  },
+  {
+    name: "MX",
+    count: 1,
+  },
+  {
+    name: "CA",
+    count: 1,
+  },
+];
+
+const renderComponent = () => {
+  return render(
+    // <Auth0Provider
+    //   domain={`${domain}`}
+    //   clientId={`${clientId}`}
+    //   redirectUri={redirectUri}
+    //   audience={audience}
+    // >
+    //   <AuthorizationProvider>
+    //     <ApolloProviderWithAuth0>
+    //       <BrowserRouter>
+    // <Hello a="aaa" b="bbb" />
+    <Test />
+    //       </BrowserRouter>
+    //     </ApolloProviderWithAuth0>
+    //   </AuthorizationProvider>
+    // </Auth0Provider>
+  );
+};
+
+describe("WorldheatMap Component test cases", () => {
+  it("renders the component correctly without crashing", () => {
+    // await act(async () => {
+    //   renderComponent();
+    // });
+    // const somosId_firstRow = screen.getByText("a");
+    // expect(somosId_firstRow).toBeInTheDocument();
+    const view = renderComponent();
+    expect(view).toBeInTheDocument();
+  });
+});
